@@ -210,11 +210,11 @@ export default function App() {
             <form className="auth-form" onSubmit={handleLogin}>
               <label>
                 <span>Email address</span>
-                <input type="email" placeholder="name@example.com" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required />
+                <input type="email" placeholder="name@example.com" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} autoComplete="off" required />
               </label>
               <label>
                 <span>Password</span>
-                <input type="password" placeholder="••••••••" value={loginPass} onChange={e => setLoginPass(e.target.value)} required />
+                <input type="password" placeholder="••••••••" value={loginPass} onChange={e => setLoginPass(e.target.value)} autoComplete="new-password" required />
               </label>
               <div className="forgot-pass">Forgot Password?</div>
               {authError && <div className="error-box">{authError}</div>}
@@ -270,15 +270,15 @@ export default function App() {
             <form className="auth-form" onSubmit={handleSignup}>
               <label>
                 <span>Username</span>
-                <input type="text" placeholder="Enter username" value={signupName} onChange={e => setSignupName(e.target.value)} required />
+                <input type="text" placeholder="Enter username" value={signupName} onChange={e => setSignupName(e.target.value)} autoComplete="off" required />
               </label>
               <label>
                 <span>Email address</span>
-                <input type="email" placeholder="name@example.com" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required />
+                <input type="email" placeholder="name@example.com" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} autoComplete="off" required />
               </label>
               <label>
                 <span>Password (Strong)</span>
-                <input type="password" placeholder="Min 8 chars, @$!%*?&" value={signupPass} onChange={e => setSignupPass(e.target.value)} required />
+                <input type="password" placeholder="Min 8 chars, @$!%*?&" value={signupPass} onChange={e => setSignupPass(e.target.value)} autoComplete="new-password" required />
               </label>
               {authError && <div className="error-box">{authError}</div>}
               <button type="submit" className="btn-primary" style={{marginTop: "12px"}}>Create Account</button>

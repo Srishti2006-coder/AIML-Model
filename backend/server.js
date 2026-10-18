@@ -74,7 +74,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.0; // Wait, let's keep it proper:
+      return res.status(400).json({ error: "Invalid email or password." });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -98,10 +98,8 @@ app.post("/api/auth/google", async (req, res) => {
     });
     const { name, email } = ticket.getPayload();
 
-    // Check if user already exists in database, if not create one automatically
     let user = await User.findOne({ email });
     if (!user) {
-      // Create a random secure password for Google users since password is required in schema
       const randomPassword = Math.random().toString(36).slice(-8) + "Aa1@";
       const hashedPassword = await bcrypt.hash(randomPassword, 10);
       user = new User({ username: name, email, password: hashedPassword });
@@ -113,8 +111,8 @@ app.post("/api/auth/google", async (req, res) => {
       user: { username: user.username, email: user.email } 
     });
   } catch (err) {
-    console.error("Google auth verification error:", err);
-    res.status(400).json({ error: "Google authentication failed." });
+    console.error("EXACT GOOGLE ERROR DETAILS:", err.message);
+    res.status(400).json({ error: "Google authentication failed: " + err.message });
   }
 });
 
