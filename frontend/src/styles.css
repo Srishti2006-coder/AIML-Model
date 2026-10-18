@@ -2,7 +2,7 @@
 
 :root {
   --font: 'Inter', sans-serif;
-  --bg: #0f172a;
+  --bg-color: #e2e8f0;
   --phone-bg: #f8fafc;
   --primary: #10b981;
   --primary-dark: #059669;
@@ -15,7 +15,12 @@
 body {
   margin: 0;
   font-family: var(--font);
-  background: var(--bg);
+  background-color: var(--bg-color);
+  background-image: 
+    radial-gradient(#cbd5e1 1.5px, transparent 1.5px), 
+    radial-gradient(#cbd5e1 1.5px, var(--bg-color) 1.5px);
+  background-size: 40px 40px;
+  background-position: 0 0, 20px 20px;
   color: var(--text);
   display: flex;
   justify-content: center;
@@ -23,7 +28,6 @@ body {
   min-height: 100vh;
 }
 
-/* App Container acting as a mobile device container */
 .app-container {
   width: 100vw;
   height: 100vh;
@@ -34,28 +38,28 @@ body {
 
 .phone-frame {
   width: 100%;
-  max-width: 440px;
+  max-width: 420px;
   height: 100%;
-  max-height: 900px;
+  max-height: 880px;
   background: var(--phone-bg);
   border-radius: 0px;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  border: 1px solid #334155;
+  border: 1px solid #cbd5e1;
 }
 
 @media(min-width: 480px) {
   .phone-frame {
     height: 88vh;
     border-radius: 40px;
-    border: 8px solid #1e293b;
+    border: 10px solid #1e293b;
+    box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Header */
 .phone-header {
   height: 64px;
   padding: 0 20px;
@@ -83,7 +87,6 @@ body {
 .status-badge i { width: 6px; height: 6px; border-radius: 50%; background: #cbd5e1; }
 .status-badge.on i { background: var(--primary); }
 
-/* Screen Viewports */
 .screen {
   flex: 1;
   overflow-y: auto;
@@ -92,19 +95,17 @@ body {
   flex-direction: column;
 }
 
-/* Splash Screen */
 .splash-screen {
   justify-content: center;
   align-items: center;
   text-align: center;
 }
-.splash-icon { font-size: 56px; margin-bottom: 20px; background: #e6f4ed; width: 96px; height: 96px; border-radius: 28px; display: grid; place-items: center; }
-.splash-screen h1 { font-size: 26px; font-weight: 700; margin: 0 0 12px; line-height: 1.2; }
+.splash-icon { font-size: 52px; margin-bottom: 20px; background: #e6f4ed; width: 88px; height: 88px; border-radius: 26px; display: grid; place-items: center; }
+.splash-screen h1 { font-size: 25px; font-weight: 700; margin: 0 0 12px; line-height: 1.25; }
 .splash-screen p { font-size: 14px; color: var(--muted); margin: 0 0 32px; line-height: 1.5; }
 .splash-actions { width: 100%; display: flex; flex-direction: column; gap: 12px; }
 .disclaimer-text { font-size: 11px; color: #94a3b8; margin-top: 30px; }
 
-/* Buttons */
 .btn-primary {
   width: 100%;
   padding: 14px;
@@ -131,20 +132,48 @@ body {
   cursor: pointer;
 }
 
-.btn-text { background: none; border: none; color: var(--muted); font-size: 13px; cursor: pointer; margin-top: 15px; }
+/* Google Auth Button & Divider */
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.google-btn:hover { background: #f8fafc; }
+.g-icon { background: #4285F4; color: #fff; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 12px; font-weight: 700; }
 
-/* Auth Screen */
-.auth-screen { justify-content: center; }
-.auth-header { margin-bottom: 24px; }
+.divider {
+  text-align: center;
+  border-bottom: 1px solid var(--border);
+  line-height: 0.1em;
+  margin: 10px 0 20px 0;
+}
+.divider span { background: var(--phone-bg); padding: 0 10px; font-size: 11px; color: var(--muted); font-weight: 600; }
+
+.auth-screen { justify-content: flex-start; }
+.auth-header-row { margin-bottom: 12px; }
+.back-link { background: none; border: none; color: var(--muted); font-weight: 600; font-size: 13px; cursor: pointer; padding: 0; }
+.auth-header { margin-bottom: 18px; }
 .auth-header h2 { font-size: 22px; margin: 0 0 6px; }
 .auth-header p { font-size: 13px; color: var(--muted); margin: 0; }
-.auth-form label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; font-size: 13px; font-weight: 500; }
+.auth-form label { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; font-size: 13px; font-weight: 500; }
 .auth-form input { padding: 12px; border: 1px solid var(--border); border-radius: 10px; font-size: 14px; outline: none; background: #fff; }
 .auth-form input:focus { border-color: var(--primary); }
-.auth-switch { text-align: center; margin-top: 20px; font-size: 13px; color: var(--muted); }
+.forgot-pass { font-size: 12px; color: var(--primary); font-weight: 600; text-align: right; cursor: pointer; margin-top: -6px; margin-bottom: 10px; }
+.auth-switch { text-align: center; margin-top: 16px; font-size: 13px; color: var(--muted); }
 .auth-switch span { color: var(--primary); font-weight: 600; cursor: pointer; }
 
-/* Dashboard Screen */
 .dashboard-screen { padding: 16px; gap: 16px; }
 .dash-top { display: flex; justify-content: space-between; align-items: center; background: #fff; padding: 12px 16px; border-radius: 14px; border: 1px solid var(--border); }
 .dash-top small { font-size: 11px; color: var(--muted); }
@@ -163,9 +192,8 @@ body {
 .fields-grid input { padding: 8px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; outline: none; background: #fafafa; }
 .fields-grid input:focus { border-color: var(--primary); background: #fff; }
 
-.error-box { background: #fef2f2; color: #dc2626; padding: 10px; border-radius: 8px; font-size: 12px; margin-top: 10px; }
+.error-box { background: #fef2f2; color: #dc2626; padding: 10px; border-radius: 8px; font-size: 12px; margin-top: 10px; font-weight: 500; }
 
-/* Result Card inside dashboard */
 .result-card { background: #f0fdf4; border-color: #bbf7d0; }
 .result-top { display: flex; justify-content: space-between; align-items: center; font-size: 10px; font-weight: 700; color: var(--primary-dark); }
 .result-top b { background: #dcfce7; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; }

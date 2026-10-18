@@ -15,16 +15,20 @@ const fields = [
 const empty = Object.fromEntries(fields.map(f => [f[0], ""]));
 
 export default function App() {
-  // App navigation state: 'welcome', 'auth', 'dashboard'
-  const [screen, setScreen] = useState("welcome");
-  const [authMode, setAuthMode] = useState("login"); // 'login' or 'signup'
+  const [screen, setScreen] = useState("welcome"); // 'welcome', 'login', 'signup', 'dashboard'
   
-  // Auth inputs
-  const [email, setEmail] = useState("");
-  const [password, др] = useState("");
-  const [user, setUser] = useState(null);
+  // Auth States
+  const [loginEmail, setLoginEmail] = useState("");
+  const [loginPass, setLoginPass] = useState("");
+  
+  const [signupName, setSignupName] = useState("");
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPass, setSignupPass] = useState("");
+  const [authError, setAuthError] = useState("");
+  
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Prediction form states
+  // Prediction States
   const [form, setForm] = useState(empty);
   const [result, setResult] = useState(null);
   const [error, setError] = useState("");
@@ -49,7 +53,7 @@ export default function App() {
 
   const submit = async e => {
     e.preventDefault();
-    if(fields.some(f => form[f[0]] === "")) {
+    if(fields.some(f => form[f[0]] === "" || form[f[0]] === undefined || form[f[0]] === null)) {
       setError("Please enter all 8 values.");
       return;
     }
@@ -67,13 +71,71 @@ export default function App() {
     } finally { setLoading(false); }
   };
 
-  const handleAuth = e => {
+  // Connected to Backend Login API
+  const handleLogin = async e => {
     e.preventDefault();
-    if(!email || !password) {
-      alert("Please fill in all details");
+    setAuthError("");
+    if(!loginEmail || !loginPass) { setAuthError("Please fill in all fields"); return; }
+    
+    try {
+      const response = await fetch("http://localhost:5001/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: loginEmail, password: loginPass })
+      });
+      const data = await response.json();
+      
+      if (response.ok) {
+        setCurrentUser({ name: data.user.username, email: data.user.email });
+        setScreen("dashboard");
+      } else {
+        setAuthError(data.error || "Invalid email or password");
+      }
+    } catch (err) {
+      console.error("Login error:", err);
+      setAuthError("Server error during login. Make sure backend is running.");
+    }
+  };
+
+  // Connected to Backend Signup API
+  const handleSignup = async e => {
+    e.preventDefault(); // <-- Yeh hona zaroori hai taaki page refresh na ho
+    setAuthError("");
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(signupEmail)) {
+      setAuthError("Please enter a valid email address (e.g. name@example.com)");
       return;
     }
-    setUser({ email });
+
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(signupPass)) {
+      setAuthError("Password must be 8+ chars with uppercase, lowercase, number & special character (@$!%*?&)");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5001/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: signupName, email: signupEmail, password: signupPass })
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("Signup successful! Please log in.");
+        setScreen("login");
+      } else {
+        setAuthError(data.error || "Signup failed");
+      }
+    } catch (err) {
+      console.error("Signup error:", err);
+      setAuthError("Server error during registration.");
+    }
+  };
+
+  const handleGoogleAuth = () => {
+    setCurrentUser({ name: "Google User", email: "user@gmail.com" });
     setScreen("dashboard");
   };
 
@@ -81,10 +143,9 @@ export default function App() {
 
   return (
     <div className="app-container">
-      {/* Mobile Device Frame */}
       <div className="phone-frame">
         
-        {/* Top Status Bar */}
+        {/* Phone Header Bar */}
         <div className="phone-header">
           <div className="logo">Gluco<span>Check</span></div>
           <div className={"status-badge " + (online ? "on" : "")}>
@@ -92,17 +153,17 @@ export default function App() {
           </div>
         </div>
 
-        {/* SCREEN 1: WELCOME / SPLASH SCREEN */}
+        {/* 1. WELCOME SCREEN */}
         {screen === "welcome" && (
           <div className="screen splash-screen">
-            <div className="splash-icon">🩺</div>
+            <div className="splash-icon">🧬</div>
             <h1>Understand diabetes risk in seconds.</h1>
-            <p>Your pocket-friendly AI health screening assistant. Fast, secure, and powered by trained ML models.</p>
+            <p>Your AI-powered health screening assistant. Fast, secure, and built with your trained machine learning pipeline.</p>
             <div className="splash-actions">
-              <button className="btn-primary" onClick={() => { setAuthMode("signup"); setScreen("auth"); }}>
+              <button className="btn-primary" onClick={() => { setAuthError(""); setScreen("signup"); }}>
                 Get Started →
               </button>
-              <button className="btn-secondary" onClick={() => { setAuthMode("login"); setScreen("auth"); }}>
+              <button className="btn-secondary" onClick={() => { setAuthError(""); setScreen("login"); }}>
                 I already have an account
               </button>
             </div>
@@ -110,48 +171,92 @@ export default function App() {
           </div>
         )}
 
-        {/* SCREEN 2: AUTH SCREEN (LOGIN / SIGNUP) */}
-        {screen === "auth" && (
+        {/* 2. LOGIN SCREEN */}
+        {screen === "login" && (
           <div className="screen auth-screen">
+            <div className="auth-header-row">
+              <button className="back-link" onClick={() => setScreen("welcome")}>← Back</button>
+            </div>
             <div className="auth-header">
-              <h2>{authMode === "signup" ? "Create Account" : "Welcome Back"}</h2>
-              <p>{authMode === "signup" ? "Sign up to track your health assessments" : "Log in to your GlucoCheck profile"}</p>
+              <h2>Welcome Back!</h2>
+              <p>Log in to your GlucoCheck profile</p>
             </div>
 
-            <form className="auth-form" onSubmit={handleAuth}>
+            <button type="button" className="google-btn" onClick={handleGoogleAuth}>
+              <span className="g-icon">G</span> Continue with Google
+            </button>
+
+            <div className="divider"><span>OR</span></div>
+
+            <form className="auth-form" onSubmit={handleLogin}>
               <label>
                 <span>Email address</span>
-                <input type="email" placeholder="name@example.com" value={email} onChange={e => setEmail(e.target.value)} required />
+                <input type="email" placeholder="name@example.com" value={loginEmail} onChange={e => setLoginEmail(e.target.value)} required />
               </label>
               <label>
                 <span>Password</span>
-                <input type="password" placeholder="••••••••" value={password} onChange={e => др(e.target.value)} required />
+                <input type="password" placeholder="••••••••" value={loginPass} onChange={e => setLoginPass(e.target.value)} required />
               </label>
-              <button type="submit" className="btn-primary">
-                {authMode === "signup" ? "Sign Up" : "Log In"}
-              </button>
+              <div className="forgot-pass">Forgot Password?</div>
+              {authError && <div className="error-box">{authError}</div>}
+              <button type="submit" className="btn-primary" style={{marginTop: "12px"}}>Log In</button>
             </form>
 
             <div className="auth-switch">
-              {authMode === "signup" ? (
-                <p>Already have an account? <span onClick={() => setAuthMode("login")}>Log In</span></p>
-              ) : (
-                <p>Don't have an account? <span onClick={() => setAuthMode("signup")}>Sign Up</span></p>
-              )}
-              <button className="btn-text" onClick={() => setScreen("welcome")}>← Back to Home</button>
+              <p>Don't have an account? <span onClick={() => { setAuthError(""); setScreen("signup"); }}>Sign Up</span></p>
             </div>
           </div>
         )}
 
-        {/* SCREEN 3: DASHBOARD & PREDICTION APP */}
+        {/* 3. SIGNUP SCREEN */}
+        {screen === "signup" && (
+          <div className="screen auth-screen">
+            <div className="auth-header-row">
+              <button className="back-link" onClick={() => setScreen("welcome")}>← Back</button>
+            </div>
+            <div className="auth-header">
+              <h2>Create an Account</h2>
+              <p>Sign up to run diabetes risk assessments</p>
+            </div>
+
+            <button type="button" className="google-btn" onClick={handleGoogleAuth}>
+              <span className="g-icon">G</span> Continue with Google
+            </button>
+
+            <div className="divider"><span>OR</span></div>
+
+            <form className="auth-form" onSubmit={handleSignup}>
+              <label>
+                <span>Username</span>
+                <input type="text" placeholder="Enter username" value={signupName} onChange={e => setSignupName(e.target.value)} required />
+              </label>
+              <label>
+                <span>Email address</span>
+                <input type="email" placeholder="name@example.com" value={signupEmail} onChange={e => setSignupEmail(e.target.value)} required />
+              </label>
+              <label>
+                <span>Password (Strong)</span>
+                <input type="password" placeholder="Min 8 chars, @$!%*?&" value={signupPass} onChange={e => setSignupPass(e.target.value)} required />
+              </label>
+              {authError && <div className="error-box">{authError}</div>}
+              <button type="submit" className="btn-primary" style={{marginTop: "12px"}}>Create Account</button>
+            </form>
+
+            <div className="auth-switch">
+              <p>Already have an account? <span onClick={() => { setAuthError(""); setScreen("login"); }}>Log In</span></p>
+            </div>
+          </div>
+        )}
+
+        {/* 4. DASHBOARD SCREEN */}
         {screen === "dashboard" && (
           <div className="screen dashboard-screen">
             <div className="dash-top">
               <div>
                 <small>Welcome back,</small>
-                <h3>{user?.email || "User"}</h3>
+                <h3>{currentUser?.name || "User"}</h3>
               </div>
-              <button className="btn-logout" onClick={() => { setUser(null); setScreen("welcome"); }}>Logout</button>
+              <button className="btn-logout" onClick={() => { setCurrentUser(null); setScreen("welcome"); }}>Logout</button>
             </div>
 
             <div className="dash-content">
@@ -180,7 +285,7 @@ export default function App() {
               {result && (
                 <div className="card result-card">
                   <div className="result-top">
-                    <span>RESULT</span>
+                    <span>MODEL RESULT</span>
                     <b>✓</b>
                   </div>
                   <h3>{result.label}</h3>
