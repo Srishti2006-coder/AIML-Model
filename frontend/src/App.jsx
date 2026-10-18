@@ -1,3 +1,4 @@
+import { GoogleLogin } from '@react-oauth/google';
 import { useEffect, useState } from "react";
 import "./styles.css";
 
@@ -99,7 +100,7 @@ export default function App() {
 
   // Connected to Backend Signup API
   const handleSignup = async e => {
-    e.preventDefault(); // <-- Yeh hona zaroori hai taaki page refresh na ho
+    e.preventDefault();
     setAuthError("");
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -132,11 +133,6 @@ export default function App() {
       console.error("Signup error:", err);
       setAuthError("Server error during registration.");
     }
-  };
-
-  const handleGoogleAuth = () => {
-    setCurrentUser({ name: "Google User", email: "user@gmail.com" });
-    setScreen("dashboard");
   };
 
   const pct = result ? Math.round(result.diabetes_probability * 100) : 0;
@@ -182,9 +178,32 @@ export default function App() {
               <p>Log in to your GlucoCheck profile</p>
             </div>
 
-            <button type="button" className="google-btn" onClick={handleGoogleAuth}>
-              <span className="g-icon">G</span> Continue with Google
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+              <GoogleLogin
+                onSuccess={async credentialResponse => {
+                  try {
+                    const res = await fetch("http://localhost:5001/api/auth/google", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token: credentialResponse.credential })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      setCurrentUser({ name: data.user.username, email: data.user.email });
+                      setScreen("dashboard");
+                    } else {
+                      setAuthError(data.error || "Google login failed");
+                    }
+                  } catch (err) {
+                    console.error("Google auth error:", err);
+                    setAuthError("Server error during Google login");
+                  }
+                }}
+                onError={() => {
+                  setAuthError("Google Login Failed");
+                }}
+              />
+            </div>
 
             <div className="divider"><span>OR</span></div>
 
@@ -219,9 +238,32 @@ export default function App() {
               <p>Sign up to run diabetes risk assessments</p>
             </div>
 
-            <button type="button" className="google-btn" onClick={handleGoogleAuth}>
-              <span className="g-icon">G</span> Continue with Google
-            </button>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+              <GoogleLogin
+                onSuccess={async credentialResponse => {
+                  try {
+                    const res = await fetch("http://localhost:5001/api/auth/google", {
+                      method: "POST",
+                      headers: { "Content-Type": "application/json" },
+                      body: JSON.stringify({ token: credentialResponse.credential })
+                    });
+                    const data = await res.json();
+                    if (res.ok) {
+                      setCurrentUser({ name: data.user.username, email: data.user.email });
+                      setScreen("dashboard");
+                    } else {
+                      setAuthError(data.error || "Google signup failed");
+                    }
+                  } catch (err) {
+                    console.error("Google auth error:", err);
+                    setAuthError("Server error during Google signup");
+                  }
+                }}
+                onError={() => {
+                  setAuthError("Google Signup Failed");
+                }}
+              />
+            </div>
 
             <div className="divider"><span>OR</span></div>
 

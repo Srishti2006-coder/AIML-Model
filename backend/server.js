@@ -3,6 +3,7 @@ import cors from "cors";
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
 import dotenv from "dotenv";
+import { OAuth2Client } from "google-auth-library";
 import User from "./models/User.js";
 
 dotenv.config();
@@ -10,6 +11,8 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 const ML_API = "http://127.0.0.1:5000";
+const GOOGLE_CLIENT_ID = "721271308120-ukjpt2eds5amh5d5mkd05ok42fbcg77.apps.googleusercontent.com";
+const client = new OAuth2Client(GOOGLE_CLIENT_ID);
 
 app.use(cors());
 app.use(express.json());
@@ -59,7 +62,7 @@ app.post("/api/auth/signup", async (req, res) => {
     await newUser.save();
     res.status(201).json({ message: "User registered successfully", user: { username, email } });
   } catch (err) {
-    console.error("EXACT SIGNUP ERROR:", err); // <-- Yeh line zaroor add karein
+    console.error("EXACT SIGNUP ERROR:", err);
     res.status(500).json({ error: err.message || "Server error during registration." });
   }
 });
@@ -71,7 +74,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Invalid email or password." });
+      return res.0; // Wait, let's keep it proper:
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -82,6 +85,36 @@ app.post("/api/auth/login", async (req, res) => {
     res.json({ message: "Login successful", user: { username: user.username, email: user.email } });
   } catch (err) {
     res.status(500).json({ error: "Server error during login." });
+  }
+});
+
+// Google Authentication Route
+app.post("/api/auth/google", async (req, res) => {
+  try {
+    const { token } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: GOOGLE_CLIENT_ID,
+    });
+    const { name, email } = ticket.getPayload();
+
+    // Check if user already exists in database, if not create one automatically
+    let user = await User.findOne({ email });
+    if (!user) {
+      // Create a random secure password for Google users since password is required in schema
+      const randomPassword = Math.random().toString(36).slice(-8) + "Aa1@";
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+      user = new User({ username: name, email, password: hashedPassword });
+      await user.save();
+    }
+
+    res.status(200).json({ 
+      message: "Google Authentication Successful", 
+      user: { username: user.username, email: user.email } 
+    });
+  } catch (err) {
+    console.error("Google auth verification error:", err);
+    res.status(400).json({ error: "Google authentication failed." });
   }
 });
 
