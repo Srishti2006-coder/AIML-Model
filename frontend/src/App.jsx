@@ -189,7 +189,6 @@ function App() {
     setError("");
   };
 
-  // Quick Clinical Presets
   const loadPreset = (type) => {
     if (type === "healthy") {
       setForm({ Pregnancies: "1", Glucose: "85", BloodPressure: "70", SkinThickness: "20", Insulin: "75", BMI: "22.0", DiabetesPedigreeFunction: "0.25", Age: "28" });
@@ -394,52 +393,80 @@ function App() {
 
   if (screen === "welcome") {
     return (
-      <div className="gc-landing">
-        <header className="gc-nav">
+      <div className="gc-landing" style={{ background: "#f8fafc", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+        <header className="gc-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 60px", background: "#fff", borderBottom: "1px solid #e2e8f0" }}>
           <Brand />
-          <div className="gc-nav-actions">
-            <button className="gc-button gc-quiet" onClick={() => setScreen("login")}>Sign in</button>
-            <button className="gc-button gc-primary" onClick={startPrediction}>
+          <div className="gc-nav-actions" style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+            <button className="gc-button gc-quiet" onClick={() => setScreen("login")} style={{ background: "transparent", border: "none", fontWeight: "600", cursor: "pointer", color: "#475569" }}>Sign in</button>
+            <button className="gc-button gc-primary" onClick={startPrediction} style={{ background: "#0d9488", color: "#fff", padding: "10px 20px", borderRadius: "10px", border: "none", fontWeight: "600", cursor: "pointer", boxShadow: "0 4px 12px rgba(13, 148, 136, 0.2)" }}>
               Try GlucoCheck <span>→</span>
             </button>
           </div>
         </header>
 
-        <main className="gc-hero">
+        <main className="gc-hero" style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "60px", padding: "60px", maxWidth: "1300px", margin: "0 auto", alignItems: "center", flex: 1 }}>
           <section className="gc-hero-copy">
-            <span className="gc-eyebrow">● MACHINE LEARNING · HEALTH EDUCATION</span>
-            <h1>Making diabetes screening models easier to <span>understand.</span></h1>
-            <p>
-              GlucoCheck explores the Pima Indians Diabetes dataset and shows
-              how a machine-learning workflow turns selected inputs into a
-              model estimate.
+            <span className="gc-eyebrow" style={{ display: "inline-block", background: "#ccfbf1", color: "#0f766e", padding: "6px 14px", borderRadius: "99px", fontSize: "12px", fontWeight: 700, marginBottom: "20px", letterSpacing: "0.5px" }}>
+              ● MACHINE LEARNING · HEALTH EDUCATION
+            </span>
+            <h1 style={{ fontSize: "46px", fontWeight: 800, color: "#0f172a", lineHeight: "1.15", margin: "0 0 20px 0" }}>
+              Making diabetes screening models easier to <span style={{ color: "#0d9488" }}>understand.</span>
+            </h1>
+            <p style={{ fontSize: "16px", color: "#475569", lineHeight: "1.6", margin: "0 0 30px 0" }}>
+              GlucoCheck explores the Pima Indians Diabetes dataset and demonstrates how a Random Forest machine-learning workflow turns clinical inputs into real-time model estimates, backed by MongoDB Atlas cloud storage.
             </p>
-            <button className="gc-button gc-primary gc-large" onClick={startPrediction}>
-              Try GlucoCheck <span>→</span>
-            </button>
-            <div className="gc-hero-proof">
-              <span>✓ Existing trained model</span>
-              <span>✓ Transparent workflow</span>
+            <div style={{ display: "flex", gap: "16px", marginBottom: "40px" }}>
+              <button className="gc-button gc-primary gc-large" onClick={startPrediction} style={{ background: "#0d9488", color: "#fff", padding: "14px 28px", borderRadius: "12px", border: "none", fontWeight: "700", fontSize: "16px", cursor: "pointer", boxShadow: "0 8px 20px rgba(13, 148, 136, 0.25)" }}>
+                Launch Dashboard <span>→</span>
+              </button>
+            </div>
+            
+            {/* TECH STACK TRUST PILLS */}
+            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>⚡ React.js</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🍃 MongoDB Atlas</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🌲 Random Forest ML</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🚀 Express API</span>
             </div>
           </section>
 
-          <section className="gc-hero-visual">
-            <div className="gc-visual-top">
-              <span>● ● ●</span><b>MODEL WORKFLOW</b>
-            </div>
-            {[
-              ["01", "Kaggle dataset", "768 rows · 8 input features"],
-              ["02", "Preprocessing", "Scaling and feature selection"],
-              ["03", "Trained ML model", "Random Forest classifier"],
-              ["04", "Prediction output", "Class and model estimate"]
-            ].map((item, index) => (
-              <div className="gc-workflow-item" key={item[0]}>
-                <span className="gc-step">{item[0]}</span>
-                <div><b>{item[1]}</b><small>{item[2]}</small></div>
-                <span className="gc-check">{index === 3 ? "↗" : "✓"}</span>
+          {/* INTERACTIVE MINI SIMULATOR WIDGET */}
+          <section className="gc-hero-visual" style={{ background: "#fff", borderRadius: "24px", padding: "32px", border: "1px solid #e2e8f0", boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <div style={{ display: "flex", gap: "6px" }}>
+                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ef4444", display: "inline-block" }}></span>
+                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#f59e0b", display: "inline-block" }}></span>
+                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#10b981", display: "inline-block" }}></span>
               </div>
-            ))}
-            <div className="gc-visual-caption">Educational ML workflow · Not a diagnosis</div>
+              <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", background: "#f8fafc", padding: "4px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>LIVE MODEL PREVIEW</span>
+            </div>
+
+            <div style={{ background: "#f8fafc", borderRadius: "16px", padding: "24px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>
+                <span>Sample Glucose Level</span>
+                <span style={{ color: "#0d9488" }}>120 mg/dL</span>
+              </div>
+              <div style={{ width: "100%", height: "6px", background: "#cbd5e1", borderRadius: "3px", position: "relative" }}>
+                <div style={{ width: "45%", height: "100%", background: "#0d9488", borderRadius: "3px" }}></div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginTop: "10px" }}>
+                <div style={{ background: "#fff", padding: "14px", borderRadius: "12px", border: "1px solid #e2e8f0", textAlign: "center" }}>
+                  <span style={{ fontSize: "10px", color: "#64748b", display: "block", marginBottom: "2px" }}>MODEL ACCURACY</span>
+                  <b style={{ fontSize: "18px", color: "#0f172a" }}>87.01%</b>
+                </div>
+                <div style={{ background: "#fff", padding: "14px", borderRadius: "12px", border: "1px solid #e2e8f0", textAlign: "center" }}>
+                  <span style={{ fontSize: "10px", color: "#64748b", display: "block", marginBottom: "2px" }}>DATASET SIZE</span>
+                  <b style={{ fontSize: "18px", color: "#0d9488" }}>768 Rows</b>
+                </div>
+              </div>
+
+              <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px", borderRadius: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
+                <span style={{ fontSize: "12px", color: "#16a34a", fontWeight: 600 }}>Estimated Status: Low Risk</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a" }}>19% Probability</span>
+              </div>
+            </div>
+            <div style={{ fontSize: "11px", color: "#94a3b8", textAlign: "center", marginTop: "20px" }}>Educational ML workflow · Not a medical diagnosis</div>
           </section>
         </main>
       </div>
@@ -468,7 +495,7 @@ function App() {
       </aside>
 
       <main className="gc-main">
-        {/* CLEAN MINIMALIST TOPBAR (NO EMOJIS/ICONS) */}
+        {/* CLEAN MINIMALIST TOPBAR */}
         <header className="gc-topbar" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 32px", background: "#fff", borderBottom: "1px solid #e2e8f0" }}>
           <div>
             <span className="gc-eyebrow" style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>GLUCOCHECK / WORKSPACE</span>
@@ -633,7 +660,7 @@ function App() {
         {tab === "prediction" && (
           <div className="gc-content" style={{ padding: "32px" }}>
             
-            {/* VISUAL IDEA 3: QUICK PATIENT PERSONA BUTTONS */}
+            {/* QUICK CLINICAL PRESETS */}
             <section style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "20px 24px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
               <div>
                 <h4 style={{ margin: "0 0 4px 0", fontSize: "15px", color: "#0f172a" }}>Quick Clinical Presets</h4>
@@ -669,7 +696,6 @@ function App() {
                             required 
                             style={{ padding: "10px", borderRadius: "8px", border: `1px solid ${isOverNormal ? "#f87171" : "#cbd5e1"}`, outline: "none", fontSize: "13px", background: isOverNormal ? "#fff5f5" : "#fff" }} 
                           />
-                          {/* VISUAL IDEA 2: MINI RANGE SLIDER BAR */}
                           <div style={{ width: "100%", height: "4px", background: "#e2e8f0", borderRadius: "2px", overflow: "hidden" }}>
                             <div style={{ width: `${Math.min(100, (val / field.max) * 100)}%`, height: "100%", background: isOverNormal ? "#dc2626" : "#0d9488", transition: "width 0.3s" }} />
                           </div>
@@ -684,7 +710,6 @@ function App() {
                 </form>
               </article>
 
-              {/* VISUAL IDEA 1: ANIMATED RADIAL GAUGE RESULT PANEL */}
               <aside>
                 <article className="gc-panel" style={{ background: "#fff", padding: "24px", borderRadius: "16px", border: "1px solid #e2e8f0", textAlign: "center" }}>
                   <h3 style={{ margin: "0 0 20px 0", fontSize: "16px" }}>Model Inference Output</h3>
