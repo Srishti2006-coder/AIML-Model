@@ -391,7 +391,7 @@ function App() {
     );
   }
 
-  if (screen === "welcome") {
+ if (screen === "welcome") {
     return (
       <div className="gc-landing" style={{ background: "#f8fafc", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <header className="gc-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 60px", background: "#fff", borderBottom: "1px solid #e2e8f0" }}>
@@ -404,25 +404,25 @@ function App() {
           </div>
         </header>
 
-        <main className="gc-hero" style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: "60px", padding: "60px", maxWidth: "1300px", margin: "0 auto", alignItems: "center", flex: 1 }}>
+        <main className="gc-hero" style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "60px", padding: "80px 60px", maxWidth: "1200px", margin: "0 auto", alignItems: "center", flex: 1 }}>
           <section className="gc-hero-copy">
             <span className="gc-eyebrow" style={{ display: "inline-block", background: "#ccfbf1", color: "#0f766e", padding: "6px 14px", borderRadius: "99px", fontSize: "12px", fontWeight: 700, marginBottom: "20px", letterSpacing: "0.5px" }}>
-              ● MACHINE LEARNING · HEALTH EDUCATION
+              ● AI HEALTH SCREENING
             </span>
-            <h1 style={{ fontSize: "46px", fontWeight: 800, color: "#0f172a", lineHeight: "1.15", margin: "0 0 20px 0" }}>
-              Making diabetes screening models easier to <span style={{ color: "#0d9488" }}>understand.</span>
+            <h1 style={{ fontSize: "52px", fontWeight: 800, color: "#0f172a", lineHeight: "1.1", margin: "0 0 20px 0" }}>
+              Smart diabetes insights, <span style={{ color: "#0d9488" }}>simplified.</span>
             </h1>
-            <p style={{ fontSize: "16px", color: "#475569", lineHeight: "1.6", margin: "0 0 30px 0" }}>
-              GlucoCheck explores the Pima Indians Diabetes dataset and demonstrates how a Random Forest machine-learning workflow turns clinical inputs into real-time model estimates, backed by MongoDB Atlas cloud storage.
+            <p style={{ fontSize: "16px", color: "#64748b", lineHeight: "1.6", margin: "0 0 28px 0", maxWidth: "480px" }}>
+              Evaluate your health metrics instantly using our trained Random Forest model with real-time MongoDB cloud integration.
             </p>
-            <div style={{ display: "flex", gap: "16px", marginBottom: "40px" }}>
-              <button className="gc-button gc-primary gc-large" onClick={startPrediction} style={{ background: "#0d9488", color: "#fff", padding: "14px 28px", borderRadius: "12px", border: "none", fontWeight: "700", fontSize: "16px", cursor: "pointer", boxShadow: "0 8px 20px rgba(13, 148, 136, 0.25)" }}>
+            <div style={{ display: "flex", gap: "16px", alignItems: "center", marginBottom: "36px" }}>
+              <button className="gc-button gc-primary gc-large" onClick={startPrediction} style={{ background: "#0d9488", color: "#fff", padding: "14px 32px", borderRadius: "12px", border: "none", fontWeight: "700", fontSize: "16px", cursor: "pointer", boxShadow: "0 8px 20px rgba(13, 148, 136, 0.25)" }}>
                 Launch Dashboard <span>→</span>
               </button>
             </div>
-            
-            {/* TECH STACK TRUST PILLS */}
-            <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+
+            {/* TECH STACK TRUST PILLS (RE-ADDED) */}
+            <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>⚡ React.js</span>
               <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🍃 MongoDB Atlas</span>
               <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🌲 Random Forest ML</span>
@@ -430,43 +430,25 @@ function App() {
             </div>
           </section>
 
-          {/* INTERACTIVE MINI SIMULATOR WIDGET */}
-          <section className="gc-hero-visual" style={{ background: "#fff", borderRadius: "24px", padding: "32px", border: "1px solid #e2e8f0", boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-              <div style={{ display: "flex", gap: "6px" }}>
-                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#ef4444", display: "inline-block" }}></span>
-                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#f59e0b", display: "inline-block" }}></span>
-                <span style={{ width: "10px", height: "10px", borderRadius: "50%", background: "#10b981", display: "inline-block" }}></span>
-              </div>
-              <span style={{ fontSize: "11px", fontWeight: 700, color: "#64748b", background: "#f8fafc", padding: "4px 10px", borderRadius: "6px", border: "1px solid #e2e8f0" }}>LIVE MODEL PREVIEW</span>
+          {/* CLEAN MINIMALIST PREVIEW CARD */}
+          <section className="gc-hero-visual" style={{ background: "#fff", borderRadius: "24px", padding: "36px", border: "1px solid #e2e8f0", boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)", textAlign: "center" }}>
+            <div style={{ width: "72px", height: "72px", background: "#ccfbf1", borderRadius: "50%", display: "grid", placeItems: "center", margin: "0 auto 20px auto", fontSize: "32px" }}>
+              🩺
             </div>
-
-            <div style={{ background: "#f8fafc", borderRadius: "16px", padding: "24px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", gap: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", fontWeight: 600, color: "#0f172a" }}>
-                <span>Sample Glucose Level</span>
-                <span style={{ color: "#0d9488" }}>120 mg/dL</span>
+            <h3 style={{ fontSize: "20px", fontWeight: 700, color: "#0f172a", margin: "0 0 8px 0" }}>Clinical AI Assistant</h3>
+            <p style={{ fontSize: "13px", color: "#64748b", margin: "0 0 24px 0", lineHeight: "1.5" }}>
+              Fast, transparent risk assessment powered by machine learning and secure cloud records.
+            </p>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", background: "#f8fafc", padding: "16px", borderRadius: "16px", border: "1px solid #e2e8f0" }}>
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>Model Accuracy</span>
+                <b style={{ fontSize: "16px", color: "#0f172a" }}>87.01%</b>
               </div>
-              <div style={{ width: "100%", height: "6px", background: "#cbd5e1", borderRadius: "3px", position: "relative" }}>
-                <div style={{ width: "45%", height: "100%", background: "#0d9488", borderRadius: "3px" }}></div>
-              </div>
-
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px", marginTop: "10px" }}>
-                <div style={{ background: "#fff", padding: "14px", borderRadius: "12px", border: "1px solid #e2e8f0", textAlign: "center" }}>
-                  <span style={{ fontSize: "10px", color: "#64748b", display: "block", marginBottom: "2px" }}>MODEL ACCURACY</span>
-                  <b style={{ fontSize: "18px", color: "#0f172a" }}>87.01%</b>
-                </div>
-                <div style={{ background: "#fff", padding: "14px", borderRadius: "12px", border: "1px solid #e2e8f0", textAlign: "center" }}>
-                  <span style={{ fontSize: "10px", color: "#64748b", display: "block", marginBottom: "2px" }}>DATASET SIZE</span>
-                  <b style={{ fontSize: "18px", color: "#0d9488" }}>768 Rows</b>
-                </div>
-              </div>
-
-              <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px", borderRadius: "12px", display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "8px" }}>
-                <span style={{ fontSize: "12px", color: "#16a34a", fontWeight: 600 }}>Estimated Status: Low Risk</span>
-                <span style={{ fontSize: "12px", fontWeight: 700, color: "#16a34a" }}>19% Probability</span>
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>Database</span>
+                <b style={{ fontSize: "16px", color: "#0d9488" }}>MongoDB Atlas</b>
               </div>
             </div>
-            <div style={{ fontSize: "11px", color: "#94a3b8", textAlign: "center", marginTop: "20px" }}>Educational ML workflow · Not a medical diagnosis</div>
           </section>
         </main>
       </div>
