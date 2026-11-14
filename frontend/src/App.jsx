@@ -1,4 +1,5 @@
 import ModelDetails from "./ModelDetails";
+import Profile from "./Profile";
 import { GoogleLogin } from "@react-oauth/google";
 import { useEffect, useState } from "react";
 import "./styles.css";
@@ -30,10 +31,12 @@ function App() {
   const [pendingPrediction, setPendingPrediction] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  // Profile extended fields for age & gender
+  // Profile extended fields
   const [userAge, setUserAge] = useState("28");
   const [userGender, setUserGender] = useState("Female");
-  const [profileSaved, setProfileSaved] = useState(false);
+  const [bloodGroup, setBloodGroup] = useState("O+");
+  const [medicalHistory, setMedicalHistory] = useState("");
+  const [reportFileName, setReportFileName] = useState("");
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -413,7 +416,7 @@ function App() {
         <main className="gc-hero" style={{ display: "grid", gridTemplateColumns: "1.1fr 1fr", gap: "60px", padding: "80px 60px", maxWidth: "1200px", margin: "0 auto", alignItems: "center", flex: 1 }}>
           <section className="gc-hero-copy">
             <span className="gc-eyebrow" style={{ display: "inline-block", background: "#ccfbf1", color: "#0f766e", padding: "6px 14px", borderRadius: "99px", fontSize: "12px", fontWeight: 700, marginBottom: "20px", letterSpacing: "0.5px" }}>
-              ● AI HEALTH SCREENING
+              [SYSTEM ACTIVE] AI HEALTH SCREENING
             </span>
             <h1 style={{ fontSize: "52px", fontWeight: 800, color: "#0f172a", lineHeight: "1.1", margin: "0 0 20px 0" }}>
               Smart diabetes insights, <span style={{ color: "#0d9488" }}>simplified.</span>
@@ -428,16 +431,16 @@ function App() {
             </div>
 
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
-              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>⚡ React.js</span>
-              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🍃 MongoDB Atlas</span>
-              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🌲 Random Forest ML</span>
-              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🚀 Express API</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>React.js</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>MongoDB Atlas</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>Random Forest ML</span>
+              <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>Express API</span>
             </div>
           </section>
 
           <section className="gc-hero-visual" style={{ background: "#fff", borderRadius: "24px", padding: "36px", border: "1px solid #e2e8f0", boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)", textAlign: "center" }}>
-            <div style={{ width: "72px", height: "72px", background: "#ccfbf1", borderRadius: "50%", display: "grid", placeItems: "center", margin: "0 auto 20px auto", fontSize: "32px" }}>
-              🩺
+            <div style={{ width: "72px", height: "72px", background: "#ccfbf1", borderRadius: "50%", display: "grid", placeItems: "center", margin: "0 auto 20px auto", fontSize: "20px", fontWeight: 700, color: "#0d9488" }}>
+              AI
             </div>
             <h3 style={{ fontSize: "20px", fontWeight: 700, color: "#0f172a", margin: "0 0 8px 0" }}>Clinical AI Assistant</h3>
             <p style={{ fontSize: "13px", color: "#64748b", margin: "0 0 24px 0", lineHeight: "1.5" }}>
@@ -466,17 +469,17 @@ function App() {
         <span className="gc-side-label">WORKSPACE</span>
 
         <button className={tab === "overview" ? "gc-side-link active" : "gc-side-link"}
-          onClick={() => setTab("overview")}>▦ <span>Dashboard</span></button>
+          onClick={() => setTab("overview")}>[Dashboard]</button>
         <button className={tab === "prediction" ? "gc-side-link active" : "gc-side-link"}
-          onClick={() => setTab("prediction")}>⌁ <span>New prediction</span></button>
+          onClick={() => setTab("prediction")}>[New Prediction]</button>
         <button className={tab === "models" ? "gc-side-link active" : "gc-side-link"}
-          onClick={() => setTab("models")}>◫ <span>Model details</span></button>
+          onClick={() => setTab("models")}>[Model Details]</button>
         <button className={tab === "profile" ? "gc-side-link active" : "gc-side-link"}
-          onClick={() => setTab("profile")}>◎ <span>My profile</span></button>
+          onClick={() => setTab("profile")}>[My Profile]</button>
 
         <div className="gc-sidebar-bottom">
           <div className="gc-health-note"><b>Educational project</b><small>Not a medical diagnosis</small></div>
-          <button className="gc-side-link gc-logout" onClick={logout}>↪ <span>Sign out</span></button>
+          <button className="gc-side-link gc-logout" onClick={logout}>[Sign Out]</button>
         </div>
       </aside>
 
@@ -517,8 +520,8 @@ function App() {
                   Start a new prediction →
                 </button>
               </div>
-              <div style={{ fontSize: "64px", opacity: 0.15, fontWeight: 800, userSelect: "none" }}>
-                🧬
+              <div style={{ fontSize: "40px", opacity: 0.2, fontWeight: 800, userSelect: "none" }}>
+                [AI]
               </div>
             </section>
 
@@ -528,12 +531,12 @@ function App() {
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
                   <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Disease Trend Analytics (Recent 10 Tests)</h3>
                   <span style={{ fontSize: "12px", padding: "4px 10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "6px", color: "#64748b" }}>
-                    📊 Total Tests: {assessmentsHistory.length}
+                    Total Tests: {assessmentsHistory.length}
                   </span>
                 </div>
                 <div style={{ display: "flex", gap: "16px", fontSize: "12px", color: "#64748b", marginBottom: "16px" }}>
-                  <span>🔵 Glucose Level</span>
-                  <span>🚨 High Risk Bar (Red)</span>
+                  <span>[Normal] Glucose Level</span>
+                  <span>[High Risk Alert] Red Bar</span>
                 </div>
                 
                 <div style={{ height: "180px", display: "flex", alignItems: "flex-end", gap: "14px", borderBottom: "1px solid #e2e8f0", paddingBottom: "8px", position: "relative" }}>
@@ -618,7 +621,7 @@ function App() {
                             </td>
                             <td style={{ padding: "14px 12px" }}>
                               <span style={{ padding: "4px 10px", borderRadius: "6px", fontSize: "11px", fontWeight: "600", background: isHighRisk ? "#fef2f2" : "#f0fdf4", color: isHighRisk ? "#dc2626" : "#16a34a" }}>
-                                {isHighRisk ? "🚨 Red Alert / Warning" : "✅ Good"}
+                                {isHighRisk ? "[WARNING] Alert" : "[STATUS] Good"}
                               </span>
                             </td>
                           </tr>
@@ -632,88 +635,19 @@ function App() {
         )}
 
         {tab === "profile" && (
-          <div style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px", maxWidth: "900px" }}>
-            <div style={{ background: "#fff", padding: "32px", borderRadius: "16px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-                <span style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#0d9488", color: "#fff", display: "grid", placeItems: "center", fontSize: "24px", fontWeight: 700 }}>
-                  {(user?.name || "S").slice(0, 1).toUpperCase()}
-                </span>
-                <div>
-                  <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>PATIENT ACCOUNT</span>
-                  <h2 style={{ fontSize: "22px", fontWeight: 700, margin: "2px 0 4px 0", color: "#0f172a" }}>{user?.name || "Srishti Bansal"}</h2>
-                  <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{user?.email || "srishti1543.becse24@chitkara.edu.in"}</p>
-                </div>
-              </div>
-              <span style={{ background: "#f0fdf4", color: "#16a34a", padding: "6px 14px", borderRadius: "99px", fontSize: "12px", fontWeight: 700, border: "1px solid #bbf7d0" }}>
-                ● Signed in
-              </span>
-            </div>
-
-            <div style={{ background: "#fff", padding: "32px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
-              <h3 style={{ margin: "0 0 8px 0", fontSize: "16px", fontWeight: 700, color: "#0f172a" }}>Clinical & Personal Information</h3>
-              <p style={{ fontSize: "13px", color: "#64748b", margin: "0 0 24px 0", lineHeight: "1.5" }}>
-                Update your demographic details below. These values will be automatically populated into your official downloadable medical reports.
-              </p>
-
-              <form onSubmit={(e) => { e.preventDefault(); alert("Profile updated successfully!"); }} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
-                  
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Full Name</label>
-                    <input 
-                      type="text" 
-                      value={user?.name || "Srishti Bansal"} 
-                      disabled 
-                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", background: "#f8fafc", color: "#64748b", fontSize: "13px" }} 
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Email Address</label>
-                    <input 
-                      type="email" 
-                      value={user?.email || "srishti1543.becse24@chitkara.edu.in"} 
-                      disabled 
-                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", background: "#f8fafc", color: "#64748b", fontSize: "13px" }} 
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Age (Years)</label>
-                    <input 
-                      type="number" 
-                      value={userAge} 
-                      onChange={(e) => setUserAge(e.target.value)} 
-                      min="1" 
-                      max="120" 
-                      required
-                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", fontSize: "13px", outline: "none", background: "#fff", color: "#0f172a" }} 
-                    />
-                  </div>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Gender</label>
-                    <select 
-                      value={userGender} 
-                      onChange={(e) => setUserGender(e.target.value)}
-                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", fontSize: "13px", background: "#fff", outline: "none", color: "#0f172a" }}
-                    >
-                      <option value="Female">Female</option>
-                      <option value="Male">Male</option>
-                      <option value="Other">Other</option>
-                    </select>
-                  </div>
-
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "12px" }}>
-                  <button type="submit" style={{ background: "#0d9488", color: "#fff", border: "none", padding: "12px 24px", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
-                    Save Profile Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
+          <Profile 
+            user={user} 
+            userAge={userAge} 
+            setUserAge={setUserAge} 
+            userGender={userGender} 
+            setUserGender={setUserGender} 
+            bloodGroup={bloodGroup}
+            setBloodGroup={setBloodGroup}
+            medicalHistory={medicalHistory}
+            setMedicalHistory={setMedicalHistory}
+            reportFileName={reportFileName}
+            setReportFileName={setReportFileName}
+          />
         )}
 
         {tab === "models" && <ModelDetails />}
@@ -727,9 +661,9 @@ function App() {
                 <p style={{ margin: "0", fontSize: "12px", color: "#64748b" }}>Click a persona to instantly load test parameters into the form.</p>
               </div>
               <div style={{ display: "flex", gap: "10px" }}>
-                <button type="button" onClick={() => loadPreset("healthy")} style={{ background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>👤 Healthy Profile</button>
-                <button type="button" onClick={() => loadPreset("atrisk")} style={{ background: "#fffbeb", color: "#d97706", border: "1px solid #fde68a", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>⚠️ At-Risk Profile</button>
-                <button type="button" onClick={() => loadPreset("highrisk")} style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>🚨 High-Risk Profile</button>
+                <button type="button" onClick={() => loadPreset("healthy")} style={{ background: "#f0fdf4", color: "#16a34a", border: "1px solid #bbf7d0", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>[Preset] Healthy Profile</button>
+                <button type="button" onClick={() => loadPreset("atrisk")} style={{ background: "#fffbeb", color: "#d97706", border: "1px solid #fde68a", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>[Preset] At-Risk Profile</button>
+                <button type="button" onClick={() => loadPreset("highrisk")} style={{ background: "#fef2f2", color: "#dc2626", border: "1px solid #fecaca", padding: "8px 14px", borderRadius: "8px", fontWeight: 600, fontSize: "12px", cursor: "pointer" }}>[Preset] High-Risk Profile</button>
               </div>
             </section>
 
@@ -775,7 +709,7 @@ function App() {
                   <h3 style={{ margin: "0 0 20px 0", fontSize: "16px" }}>Model Inference Output</h3>
                   {!result ? (
                     <div style={{ padding: "60px 0", color: "#94a3b8" }}>
-                      <div style={{ fontSize: "36px", marginBottom: "8px" }}>📊</div>
+                      <div style={{ fontSize: "16px", fontWeight: 700, marginBottom: "8px" }}>[READY]</div>
                       <b>Awaiting Input Vectors</b>
                       <p style={{ fontSize: "12px", margin: "6px 0 0 0" }}>Submit parameters or load a preset persona to evaluate risk.</p>
                     </div>
@@ -790,11 +724,11 @@ function App() {
                       </div>
 
                       <div style={{ padding: "10px 14px", borderRadius: "8px", background: isHighRisk ? "#fef2f2" : "#f0fdf4", color: isHighRisk ? "#dc2626" : "#16a34a", fontWeight: 700, fontSize: "13px", textAlign: "center" }}>
-                        {isHighRisk ? "🚨 HIGH RISK DETECTED" : "✅ LOW RISK / NORMAL"}
+                        {isHighRisk ? "[ALERT] HIGH RISK DETECTED" : "[SUCCESS] LOW RISK / NORMAL"}
                       </div>
 
                       <div style={{ background: "#f8fafc", padding: "12px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
-                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "8px" }}>🔍 Key Contributing Factors</span>
+                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "8px" }}>[FACTOR ANALYSIS] Key Contributing Parameters</span>
                         <div style={{ fontSize: "12px", color: "#334155", display: "flex", flexDirection: "column", gap: "4px" }}>
                           <div style={{ display: "flex", justifyContent: "space-between" }}>
                             <span>Glucose ({form.Glucose} mg/dL):</span>
@@ -809,7 +743,7 @@ function App() {
 
                       <div style={{ background: isHighRisk ? "#fff5f5" : "#f0fdff", padding: "12px", borderRadius: "10px", border: `1px solid ${isHighRisk ? "#fecaca" : "#a5f3fc"}` }}>
                         <span style={{ fontSize: "11px", fontWeight: 700, color: isHighRisk ? "#991b1b" : "#0e7490", display: "block", marginBottom: "6px" }}>
-                          {isHighRisk ? "💡 Clinical Recommendations" : "💡 Wellness Guidance"}
+                          {isHighRisk ? "[RECOMMENDATION] Clinical Guidance" : "[GUIDANCE] Wellness Advice"}
                         </span>
                         <p style={{ fontSize: "11px", color: isHighRisk ? "#7f1d1d" : "#155e75", margin: 0, lineHeight: "1.4" }}>
                           {isHighRisk 
@@ -821,7 +755,7 @@ function App() {
                       <button 
                         onClick={() => setShowReportModal(true)} 
                         style={{ background: "#0f172a", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", fontWeight: "600", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
-                        📄 View & Download Medical Report
+                        View & Download Medical Report
                       </button>
 
                       <p style={{ fontSize: "10px", color: "#94a3b8", textAlign: "center", margin: "0" }}>Result successfully logged to MongoDB Atlas.</p>
@@ -834,7 +768,6 @@ function App() {
         )}
       </main>
 
-      {/* PROFESSIONAL 1-PAGE MEDICAL REPORT MODAL */}
       {showReportModal && (
         <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.7)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", backdropFilter: "blur(4px)" }}>
           <div style={{ background: "#fff", width: "100%", maxWidth: "750px", borderRadius: "20px", padding: "40px", boxShadow: "20px 20px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: "24px", maxHeight: "90vh", overflowY: "auto" }}>
@@ -849,7 +782,7 @@ function App() {
               </div>
               <div style={{ textAlign: "right" }}>
                 <b style={{ fontSize: "13px", color: "#0f172a", display: "block" }}>Date: {new Date().toLocaleDateString()}</b>
-                <span style={{ fontSize: "11px", color: "#16a34a", fontWeight: 600 }}>● Verified MongoDB Log</span>
+                <span style={{ fontSize: "11px", color: "#16a34a", fontWeight: 600 }}>[VERIFIED] MongoDB Log</span>
               </div>
             </div>
 
@@ -857,8 +790,10 @@ function App() {
               <div>
                 <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>PATIENT DETAILS (FROM PROFILE)</span>
                 <b style={{ fontSize: "14px", color: "#0f172a" }}>{user?.name || "Srishti Bansal"}</b>
-                <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>Age: {userAge} yrs • Gender: {userGender}</span>
+                <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>Age: {userAge} yrs | Gender: {userGender} | Blood Group: {bloodGroup}</span>
                 <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>{user?.email || "srishti1543.becse24@chitkara.edu.in"}</span>
+                {medicalHistory && <span style={{ fontSize: "11px", color: "#475569", display: "block", marginTop: "4px" }}>History: {medicalHistory}</span>}
+                {reportFileName && <span style={{ fontSize: "11px", color: "#0d9488", display: "block" }}>Attached Report: {reportFileName}</span>}
               </div>
               <div>
                 <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>AI MODEL SPECIFICATION</span>
@@ -883,22 +818,22 @@ function App() {
               <div style={{ background: isHighRisk ? "#fef2f2" : "#f0fdf4", padding: "16px", borderRadius: "12px", border: `1px solid ${isHighRisk ? "#fecaca" : "#bbf7d0"}`, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
                 <span style={{ fontSize: "11px", fontWeight: 700, color: isHighRisk ? "#991b1b" : "#16a34a" }}>DIAGNOSTIC PROBABILITY</span>
                 <b style={{ fontSize: "32px", color: isHighRisk ? "#dc2626" : "#0d9488", margin: "4px 0" }}>{probability}%</b>
-                <span style={{ fontSize: "12px", fontWeight: 700, color: isHighRisk ? "#dc2626" : "#16a34a" }}>{isHighRisk ? "🚨 HIGH RISK DETECTED" : "✅ LOW RISK / NORMAL"}</span>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: isHighRisk ? "#dc2626" : "#16a34a" }}>{isHighRisk ? "[ALERT] HIGH RISK DETECTED" : "[NORMAL] LOW RISK / NORMAL"}</span>
               </div>
 
               <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "12px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
-                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "6px" }}>🔍 Key Explainability Factors</span>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "6px" }}>[EXPLAINABILITY] Contributing Factors</span>
                   <p style={{ fontSize: "12px", color: "#334155", margin: 0, lineHeight: "1.4" }}>
-                    {Number(form.Glucose) > 120 ? "• High Glucose impact detected on risk evaluation." : "• Glucose levels remain within normal metabolic thresholds."}<br/>
-                    {Number(form.BMI) > 25 ? "• Elevated BMI contributes to secondary risk factors." : "• BMI is within optimal healthy range."}
+                    {Number(form.Glucose) > 120 ? "- High Glucose impact detected on risk evaluation." : "- Glucose levels remain within normal metabolic thresholds."}<br/>
+                    {Number(form.BMI) > 25 ? "- Elevated BMI contributes to secondary risk factors." : "- BMI is within optimal healthy range."}
                   </p>
                 </div>
               </div>
             </div>
 
             <div style={{ background: "#f0fdff", padding: "14px 16px", borderRadius: "12px", border: "1px solid #a5f3fc" }}>
-              <span style={{ fontSize: "12px", fontWeight: 700, color: "#0e7490", display: "block", marginBottom: "4px" }}>💡 Clinical Guidance & Recommendations</span>
+              <span style={{ fontSize: "12px", fontWeight: 700, color: "#0e7490", display: "block", marginBottom: "4px" }}>[GUIDANCE] Clinical Recommendations</span>
               <p style={{ fontSize: "12px", color: "#155e75", margin: 0, lineHeight: "1.4" }}>
                 {isHighRisk 
                   ? "Recommended to consult a certified endocrinologist for comprehensive metabolic testing, dietary changes, and regular cardiovascular tracking."
@@ -918,8 +853,8 @@ function App() {
               </button>
               <button 
                 onClick={() => window.print()}
-                style={{ background: "#0d9488", color: "#fff", border: "none", padding: "10px 24px", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
-                🖨️ Print / Save as PDF
+                style={{ background: "#0d9488", color: "#fff", border: "none", padding: "10px 24px", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
+                Print / Save as PDF
               </button>
             </div>
 
