@@ -28,6 +28,12 @@ function App() {
   const [user, setUser] = useState(null);
   const [signedInAt, setSignedInAt] = useState("");
   const [pendingPrediction, setPendingPrediction] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+
+  // Profile extended fields for age & gender
+  const [userAge, setUserAge] = useState("28");
+  const [userGender, setUserGender] = useState("Female");
+  const [profileSaved, setProfileSaved] = useState(false);
 
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
@@ -391,7 +397,7 @@ function App() {
     );
   }
 
- if (screen === "welcome") {
+  if (screen === "welcome") {
     return (
       <div className="gc-landing" style={{ background: "#f8fafc", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <header className="gc-nav" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "24px 60px", background: "#fff", borderBottom: "1px solid #e2e8f0" }}>
@@ -421,7 +427,6 @@ function App() {
               </button>
             </div>
 
-            {/* TECH STACK TRUST PILLS (RE-ADDED) */}
             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
               <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>⚡ React.js</span>
               <span style={{ background: "#fff", border: "1px solid #e2e8f0", padding: "6px 12px", borderRadius: "8px", fontSize: "12px", fontWeight: 600, color: "#334155" }}>🍃 MongoDB Atlas</span>
@@ -430,7 +435,6 @@ function App() {
             </div>
           </section>
 
-          {/* CLEAN MINIMALIST PREVIEW CARD */}
           <section className="gc-hero-visual" style={{ background: "#fff", borderRadius: "24px", padding: "36px", border: "1px solid #e2e8f0", boxShadow: "0 20px 40px -15px rgba(0,0,0,0.05)", textAlign: "center" }}>
             <div style={{ width: "72px", height: "72px", background: "#ccfbf1", borderRadius: "50%", display: "grid", placeItems: "center", margin: "0 auto 20px auto", fontSize: "32px" }}>
               🩺
@@ -477,11 +481,15 @@ function App() {
       </aside>
 
       <main className="gc-main">
-        {/* CLEAN MINIMALIST TOPBAR */}
         <header className="gc-topbar" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "20px 32px", background: "#fff", borderBottom: "1px solid #e2e8f0" }}>
           <div>
             <span className="gc-eyebrow" style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>GLUCOCHECK / WORKSPACE</span>
-            <h1 style={{ fontSize: "22px", fontWeight: "700", margin: "2px 0 0 0", color: "#0f172a" }}>Dashboard</h1>
+            <h1 style={{ fontSize: "22px", fontWeight: "700", margin: "2px 0 0 0", color: "#0f172a" }}>
+              {tab === "overview" && "Dashboard"}
+              {tab === "prediction" && "New Prediction"}
+              {tab === "models" && "Model Lab"}
+              {tab === "profile" && "My Profile"}
+            </h1>
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
             <button className="gc-user-chip" onClick={() => setTab("profile")} style={{ display: "flex", alignItems: "center", gap: "10px", background: "#f8fafc", border: "1px solid #e2e8f0", padding: "6px 14px", borderRadius: "12px", cursor: "pointer" }}>
@@ -494,7 +502,6 @@ function App() {
         {tab === "overview" && (
           <div className="gc-content" style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px" }}>
             
-            {/* MODERN SaaS WELCOME BANNER */}
             <section className="gc-welcome-banner" style={{ background: "linear-gradient(135deg, #0f766e 0%, #0d9488 50%, #14b8a6 100%)", borderRadius: "20px", padding: "36px 40px", color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", boxShadow: "0 10px 25px -5px rgba(13, 148, 136, 0.2)" }}>
               <div style={{ maxWidth: "600px" }}>
                 <span style={{ display: "inline-block", background: "rgba(255,255,255,0.15)", padding: "4px 12px", borderRadius: "99px", fontSize: "11px", fontWeight: 600, marginBottom: "12px", letterSpacing: "0.5px" }}>
@@ -515,13 +522,11 @@ function App() {
               </div>
             </section>
 
-            {/* VISUAL ANALYTICS & CHARTS SECTION (MONGODB CONNECTED) */}
             <div style={{ display: "grid", gridTemplateColumns: "1.7fr 1fr", gap: "24px" }}>
               
-              {/* REAL-TIME MONGODB TREND ANALYTICS */}
               <article className="gc-panel" style={{ background: "#fff", borderRadius: "16px", padding: "24px", border: "1px solid #e2e8f0" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
-                  <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Disease Trend Analytics (Real-Time DB)</h3>
+                  <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Disease Trend Analytics (Recent 10 Tests)</h3>
                   <span style={{ fontSize: "12px", padding: "4px 10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "6px", color: "#64748b" }}>
                     📊 Total Tests: {assessmentsHistory.length}
                   </span>
@@ -539,7 +544,7 @@ function App() {
                       No assessment data in database yet. Run a prediction!
                     </div>
                   ) : (
-                    assessmentsHistory.slice(-7).map((item, i) => {
+                    assessmentsHistory.slice(0, 10).reverse().map((item, i) => {
                       const gVal = Number(item.glucose) || 100;
                       const barHeight = Math.min(100, Math.max(15, (gVal / 300) * 100));
                       const isHigh = item.risk === "High Risk";
@@ -567,7 +572,6 @@ function App() {
                 </div>
               </article>
 
-              {/* RANDOM FOREST EFFECTIVENESS DONUT */}
               <article className="gc-panel" style={{ background: "#fff", borderRadius: "16px", padding: "24px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Random Forest Model Effectiveness</h3>
                 <div style={{ margin: "10px auto", width: "130px", height: "130px", borderRadius: "50%", background: "conic-gradient(#0d9488 0% 87%, #cbd5e1 87% 100%)", display: "grid", placeItems: "center", position: "relative" }}>
@@ -580,10 +584,9 @@ function App() {
               </article>
             </div>
 
-            {/* RECENT ASSESSMENTS CLINICAL TABLE */}
             <section className="gc-panel" style={{ background: "#fff", borderRadius: "16px", padding: "24px", border: "1px solid #e2e8f0" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-                <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Recent Assessments</h3>
+                <h3 style={{ margin: "0", fontSize: "16px", fontWeight: "600" }}>Recent Assessments (Showing Latest 10)</h3>
                 <span className="gc-muted" style={{ fontSize: "12px" }}>Real-time MongoDB log</span>
               </div>
               <div style={{ overflowX: "auto" }}>
@@ -599,6 +602,7 @@ function App() {
                   </thead>
                   <tbody>
                     {assessmentsHistory
+                      .slice(0, 10)
                       .filter(row => !searchQuery || JSON.stringify(row).toLowerCase().includes(searchQuery.toLowerCase()))
                       .map((row, idx) => {
                         const isHighRisk = row.risk === "High Risk";
@@ -628,12 +632,87 @@ function App() {
         )}
 
         {tab === "profile" && (
-          <div className="gc-content" style={{ padding: "32px" }}>
-            <section className="gc-profile-hero">
-              <span className="gc-avatar gc-avatar-large">{(user?.name || "U").slice(0, 1).toUpperCase()}</span>
-              <div><span className="gc-eyebrow">ACCOUNT PROFILE</span><h2>{user?.name || "User"}</h2><p>{user?.email || "Email not available"}</p></div>
-              <span className="gc-signed-badge">● Signed in</span>
-            </section>
+          <div style={{ padding: "32px", display: "flex", flexDirection: "column", gap: "24px", maxWidth: "900px" }}>
+            <div style={{ background: "#fff", padding: "32px", borderRadius: "16px", border: "1px solid #e2e8f0", display: "flex", alignItems: "center", justifyContent: "space-between", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+                <span style={{ width: "64px", height: "64px", borderRadius: "50%", background: "#0d9488", color: "#fff", display: "grid", placeItems: "center", fontSize: "24px", fontWeight: 700 }}>
+                  {(user?.name || "S").slice(0, 1).toUpperCase()}
+                </span>
+                <div>
+                  <span style={{ fontSize: "11px", color: "#64748b", fontWeight: 600, letterSpacing: "0.5px" }}>PATIENT ACCOUNT</span>
+                  <h2 style={{ fontSize: "22px", fontWeight: 700, margin: "2px 0 4px 0", color: "#0f172a" }}>{user?.name || "Srishti Bansal"}</h2>
+                  <p style={{ margin: 0, fontSize: "13px", color: "#64748b" }}>{user?.email || "srishti1543.becse24@chitkara.edu.in"}</p>
+                </div>
+              </div>
+              <span style={{ background: "#f0fdf4", color: "#16a34a", padding: "6px 14px", borderRadius: "99px", fontSize: "12px", fontWeight: 700, border: "1px solid #bbf7d0" }}>
+                ● Signed in
+              </span>
+            </div>
+
+            <div style={{ background: "#fff", padding: "32px", borderRadius: "16px", border: "1px solid #e2e8f0", boxShadow: "0 4px 12px rgba(0,0,0,0.02)" }}>
+              <h3 style={{ margin: "0 0 8px 0", fontSize: "16px", fontWeight: 700, color: "#0f172a" }}>Clinical & Personal Information</h3>
+              <p style={{ fontSize: "13px", color: "#64748b", margin: "0 0 24px 0", lineHeight: "1.5" }}>
+                Update your demographic details below. These values will be automatically populated into your official downloadable medical reports.
+              </p>
+
+              <form onSubmit={(e) => { e.preventDefault(); alert("Profile updated successfully!"); }} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Full Name</label>
+                    <input 
+                      type="text" 
+                      value={user?.name || "Srishti Bansal"} 
+                      disabled 
+                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", background: "#f8fafc", color: "#64748b", fontSize: "13px" }} 
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Email Address</label>
+                    <input 
+                      type="email" 
+                      value={user?.email || "srishti1543.becse24@chitkara.edu.in"} 
+                      disabled 
+                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", background: "#f8fafc", color: "#64748b", fontSize: "13px" }} 
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Age (Years)</label>
+                    <input 
+                      type="number" 
+                      value={userAge} 
+                      onChange={(e) => setUserAge(e.target.value)} 
+                      min="1" 
+                      max="120" 
+                      required
+                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", fontSize: "13px", outline: "none", background: "#fff", color: "#0f172a" }} 
+                    />
+                  </div>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    <label style={{ fontSize: "12px", fontWeight: 600, color: "#334155" }}>Gender</label>
+                    <select 
+                      value={userGender} 
+                      onChange={(e) => setUserGender(e.target.value)}
+                      style={{ padding: "12px 14px", borderRadius: "10px", border: "1px solid #cbd5e1", fontSize: "13px", background: "#fff", outline: "none", color: "#0f172a" }}
+                    >
+                      <option value="Female">Female</option>
+                      <option value="Male">Male</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "12px" }}>
+                  <button type="submit" style={{ background: "#0d9488", color: "#fff", border: "none", padding: "12px 24px", borderRadius: "10px", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>
+                    Save Profile Changes
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         )}
 
@@ -642,7 +721,6 @@ function App() {
         {tab === "prediction" && (
           <div className="gc-content" style={{ padding: "32px" }}>
             
-            {/* QUICK CLINICAL PRESETS */}
             <section style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: "16px", padding: "20px 24px", marginBottom: "24px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
               <div>
                 <h4 style={{ margin: "0 0 4px 0", fontSize: "15px", color: "#0f172a" }}>Quick Clinical Presets</h4>
@@ -702,17 +780,51 @@ function App() {
                       <p style={{ fontSize: "12px", margin: "6px 0 0 0" }}>Submit parameters or load a preset persona to evaluate risk.</p>
                     </div>
                   ) : (
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
-                      <div style={{ width: "140px", height: "140px", borderRadius: "50%", background: `conic-gradient(${isHighRisk ? "#dc2626" : "#0d9488"} 0% ${probability}%, #e2e8f0 ${probability}% 100%)`, display: "grid", placeItems: "center", margin: "0 auto", position: "relative" }}>
-                        <div style={{ width: "110px", height: "110px", background: "#fff", borderRadius: "50%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-                          <span style={{ fontSize: "11px", color: "#64748b" }}>Risk Score</span>
-                          <b style={{ fontSize: "22px", color: isHighRisk ? "#dc2626" : "#0d9488" }}>{probability}%</b>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "16px", textAlign: "left" }}>
+                      
+                      <div style={{ width: "120px", height: "120px", borderRadius: "50%", background: `conic-gradient(${isHighRisk ? "#dc2626" : "#0d9488"} 0% ${probability}%, #e2e8f0 ${probability}% 100%)`, display: "grid", placeItems: "center", margin: "0 auto", position: "relative" }}>
+                        <div style={{ width: "94px", height: "94px", background: "#fff", borderRadius: "50%", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
+                          <span style={{ fontSize: "10px", color: "#64748b" }}>Risk Score</span>
+                          <b style={{ fontSize: "20px", color: isHighRisk ? "#dc2626" : "#0d9488" }}>{probability}%</b>
                         </div>
                       </div>
-                      <div style={{ padding: "10px 16px", borderRadius: "8px", background: isHighRisk ? "#fef2f2" : "#f0fdf4", color: isHighRisk ? "#dc2626" : "#16a34a", fontWeight: 700, fontSize: "14px", width: "100%" }}>
+
+                      <div style={{ padding: "10px 14px", borderRadius: "8px", background: isHighRisk ? "#fef2f2" : "#f0fdf4", color: isHighRisk ? "#dc2626" : "#16a34a", fontWeight: 700, fontSize: "13px", textAlign: "center" }}>
                         {isHighRisk ? "🚨 HIGH RISK DETECTED" : "✅ LOW RISK / NORMAL"}
                       </div>
-                      <p style={{ fontSize: "12px", color: "#64748b", margin: "0" }}>Result successfully logged to MongoDB Atlas cloud database.</p>
+
+                      <div style={{ background: "#f8fafc", padding: "12px", borderRadius: "10px", border: "1px solid #e2e8f0" }}>
+                        <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "8px" }}>🔍 Key Contributing Factors</span>
+                        <div style={{ fontSize: "12px", color: "#334155", display: "flex", flexDirection: "column", gap: "4px" }}>
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <span>Glucose ({form.Glucose} mg/dL):</span>
+                            <b style={{ color: Number(form.Glucose) > 120 ? "#dc2626" : "#16a34a" }}>{Number(form.Glucose) > 120 ? "High Impact" : "Normal"}</b>
+                          </div>
+                          <div style={{ display: "flex", justifyContent: "space-between" }}>
+                            <span>BMI ({form.BMI}):</span>
+                            <b style={{ color: Number(form.BMI) > 25 ? "#d97706" : "#16a34a" }}>{Number(form.BMI) > 25 ? "Elevated" : "Optimal"}</b>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div style={{ background: isHighRisk ? "#fff5f5" : "#f0fdff", padding: "12px", borderRadius: "10px", border: `1px solid ${isHighRisk ? "#fecaca" : "#a5f3fc"}` }}>
+                        <span style={{ fontSize: "11px", fontWeight: 700, color: isHighRisk ? "#991b1b" : "#0e7490", display: "block", marginBottom: "6px" }}>
+                          {isHighRisk ? "💡 Clinical Recommendations" : "💡 Wellness Guidance"}
+                        </span>
+                        <p style={{ fontSize: "11px", color: isHighRisk ? "#7f1d1d" : "#155e75", margin: 0, lineHeight: "1.4" }}>
+                          {isHighRisk 
+                            ? "Recommended: Consult an endocrinologist, reduce refined sugar intake, and incorporate 30 mins of daily aerobic exercise."
+                            : "Maintain your balanced diet, stay hydrated, and schedule annual routine metabolic checkups."}
+                        </p>
+                      </div>
+
+                      <button 
+                        onClick={() => setShowReportModal(true)} 
+                        style={{ background: "#0f172a", color: "#fff", border: "none", padding: "10px", borderRadius: "8px", fontWeight: "600", fontSize: "12px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}>
+                        📄 View & Download Medical Report
+                      </button>
+
+                      <p style={{ fontSize: "10px", color: "#94a3b8", textAlign: "center", margin: "0" }}>Result successfully logged to MongoDB Atlas.</p>
                     </div>
                   )}
                 </article>
@@ -721,6 +833,99 @@ function App() {
           </div>
         )}
       </main>
+
+      {/* PROFESSIONAL 1-PAGE MEDICAL REPORT MODAL */}
+      {showReportModal && (
+        <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(15, 23, 42, 0.7)", zIndex: 9999, display: "flex", justifyContent: "center", alignItems: "center", padding: "20px", backdropFilter: "blur(4px)" }}>
+          <div style={{ background: "#fff", width: "100%", maxWidth: "750px", borderRadius: "20px", padding: "40px", boxShadow: "20px 20px 60px rgba(0,0,0,0.3)", display: "flex", flexDirection: "column", gap: "24px", maxHeight: "90vh", overflowY: "auto" }}>
+            
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", borderBottom: "2px solid #0f766e", paddingBottom: "16px" }}>
+              <div>
+                <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
+                  <span style={{ background: "#0d9488", color: "#fff", width: "24px", height: "24px", borderRadius: "50%", display: "grid", placeItems: "center", fontSize: "12px", fontWeight: 700 }}>G</span>
+                  <h2 style={{ margin: 0, fontSize: "20px", fontWeight: 800, color: "#0f172a" }}>GlucoCheck Clinical AI</h2>
+                </div>
+                <span style={{ fontSize: "12px", color: "#64748b" }}>Official Diagnostic Assessment & Machine Learning Report</span>
+              </div>
+              <div style={{ textAlign: "right" }}>
+                <b style={{ fontSize: "13px", color: "#0f172a", display: "block" }}>Date: {new Date().toLocaleDateString()}</b>
+                <span style={{ fontSize: "11px", color: "#16a34a", fontWeight: 600 }}>● Verified MongoDB Log</span>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px", background: "#f8fafc", padding: "16px", borderRadius: "12px", border: "1px solid #e2e8f0" }}>
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>PATIENT DETAILS (FROM PROFILE)</span>
+                <b style={{ fontSize: "14px", color: "#0f172a" }}>{user?.name || "Srishti Bansal"}</b>
+                <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>Age: {userAge} yrs • Gender: {userGender}</span>
+                <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>{user?.email || "srishti1543.becse24@chitkara.edu.in"}</span>
+              </div>
+              <div>
+                <span style={{ fontSize: "11px", color: "#64748b", display: "block" }}>AI MODEL SPECIFICATION</span>
+                <b style={{ fontSize: "14px", color: "#0d9488" }}>Random Forest Classifier</b>
+                <span style={{ fontSize: "12px", color: "#475569", display: "block" }}>Accuracy: 87.01% (SelectKBest)</span>
+              </div>
+            </div>
+
+            <div>
+              <h4 style={{ margin: "0 0 10px 0", fontSize: "14px", fontWeight: 700, color: "#0f172a" }}>1. Clinical Input Vectors</h4>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "8px" }}>
+                {fields.map((f) => (
+                  <div key={f.key} style={{ background: "#f8fafc", padding: "8px 10px", borderRadius: "8px", border: "1px solid #e2e8f0" }}>
+                    <span style={{ fontSize: "10px", color: "#64748b", display: "block" }}>{f.label}</span>
+                    <b style={{ fontSize: "13px", color: "#0f172a" }}>{form[f.key] || "N/A"} <span style={{ fontSize: "10px", fontWeight: 400 }}>{f.unit}</span></b>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+              <div style={{ background: isHighRisk ? "#fef2f2" : "#f0fdf4", padding: "16px", borderRadius: "12px", border: `1px solid ${isHighRisk ? "#fecaca" : "#bbf7d0"}`, display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
+                <span style={{ fontSize: "11px", fontWeight: 700, color: isHighRisk ? "#991b1b" : "#16a34a" }}>DIAGNOSTIC PROBABILITY</span>
+                <b style={{ fontSize: "32px", color: isHighRisk ? "#dc2626" : "#0d9488", margin: "4px 0" }}>{probability}%</b>
+                <span style={{ fontSize: "12px", fontWeight: 700, color: isHighRisk ? "#dc2626" : "#16a34a" }}>{isHighRisk ? "🚨 HIGH RISK DETECTED" : "✅ LOW RISK / NORMAL"}</span>
+              </div>
+
+              <div style={{ background: "#f8fafc", padding: "16px", borderRadius: "12px", border: "1px solid #e2e8f0", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: 700, color: "#475569", display: "block", marginBottom: "6px" }}>🔍 Key Explainability Factors</span>
+                  <p style={{ fontSize: "12px", color: "#334155", margin: 0, lineHeight: "1.4" }}>
+                    {Number(form.Glucose) > 120 ? "• High Glucose impact detected on risk evaluation." : "• Glucose levels remain within normal metabolic thresholds."}<br/>
+                    {Number(form.BMI) > 25 ? "• Elevated BMI contributes to secondary risk factors." : "• BMI is within optimal healthy range."}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ background: "#f0fdff", padding: "14px 16px", borderRadius: "12px", border: "1px solid #a5f3fc" }}>
+              <span style={{ fontSize: "12px", fontWeight: 700, color: "#0e7490", display: "block", marginBottom: "4px" }}>💡 Clinical Guidance & Recommendations</span>
+              <p style={{ fontSize: "12px", color: "#155e75", margin: 0, lineHeight: "1.4" }}>
+                {isHighRisk 
+                  ? "Recommended to consult a certified endocrinologist for comprehensive metabolic testing, dietary changes, and regular cardiovascular tracking."
+                  : "Maintain your balanced dietary habits, ensure proper hydration, and continue routine annual wellness assessments."}
+              </p>
+            </div>
+
+            <div style={{ borderTop: "1px solid #e2e8f0", paddingTop: "12px", fontSize: "10px", color: "#94a3b8", textAlign: "center", lineHeight: "1.3" }}>
+              <b>Disclaimer:</b> Educational project only. This report is generated by an automated Random Forest model and must not be substituted for professional medical diagnosis or clinical advice.
+            </div>
+
+            <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+              <button 
+                onClick={() => setShowReportModal(false)}
+                style={{ background: "#f1f5f9", color: "#334155", border: "none", padding: "10px 20px", borderRadius: "8px", fontWeight: 600, fontSize: "13px", cursor: "pointer" }}>
+                Close
+              </button>
+              <button 
+                onClick={() => window.print()}
+                style={{ background: "#0d9488", color: "#fff", border: "none", padding: "10px 24px", borderRadius: "8px", fontWeight: 700, fontSize: "13px", cursor: "pointer", display: "flex", alignItems: "center", gap: "6px" }}>
+                🖨️ Print / Save as PDF
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
     </div>
   );
 }
